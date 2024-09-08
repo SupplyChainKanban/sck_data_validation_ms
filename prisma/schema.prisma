@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ValidationRule {
+  id           String   @id @default(uuid())
+  sourceId     String
+  keyName      String
+  rule         Rules
+  regexPattern String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([sourceId, keyName, rule])
+}
+
+model ValidationLog {
+  id        String   @id @default(uuid())
+  rawDataId String
+  errors    String
+  timestamp DateTime @default(now())
+}
+
+model ValidationResult {
+  id            String           @id @default(uuid())
+  sourceId      String
+  validatedData Json
+  status        ValidationStatus
+  timestamp     DateTime         @default(now())
+}
+
+enum Rules {
+  required
+  numeric
+  number
+  alphanumeric
+  date_format
+  optional
+  enum
+  string
+}
+
+enum ValidationStatus {
+  VALID
+  INVALID
+}

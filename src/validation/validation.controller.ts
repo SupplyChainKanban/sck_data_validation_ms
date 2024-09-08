@@ -1,16 +1,15 @@
 import { Controller, NotImplementedException } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ValidationService } from './validation.service';
-import { CreateValidationDto } from './dto/create-validation.dto';
-import { UpdateValidationDto } from './dto/update-validation.dto';
+import { CreateValidationRuleDto } from './dto/create-validation-rule.dto';
 
 @Controller()
 export class ValidationController {
   constructor(private readonly validationService: ValidationService) { }
 
   @MessagePattern('createValidationRule')
-  create(@Payload() createValidationDto: CreateValidationDto) {
-    return this.validationService.create(createValidationDto);
+  create(@Payload() createValidationRuleDto: CreateValidationRuleDto) {
+    return this.validationService.create(createValidationRuleDto);
   }
 
   @MessagePattern('validate')

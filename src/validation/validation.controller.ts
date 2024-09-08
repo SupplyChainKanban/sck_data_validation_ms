@@ -14,7 +14,7 @@ export class ValidationController {
 
   @MessagePattern('validate')
   validate() {
-    throw new NotImplementedException()
+    return this.validationService.validate();
   }
 
   // @MessagePattern('findAllValidation')

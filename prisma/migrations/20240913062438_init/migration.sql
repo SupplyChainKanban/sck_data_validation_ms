@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "Rules" AS ENUM ('required', 'numeric', 'number', 'alphanumeric', 'date_format', 'optional', 'enum', 'string');
+
+-- CreateEnum
 CREATE TYPE "ValidationStatus" AS ENUM ('VALID', 'INVALID');
 
 -- CreateTable
@@ -6,7 +9,7 @@ CREATE TABLE "ValidationRule" (
     "id" TEXT NOT NULL,
     "sourceId" TEXT NOT NULL,
     "keyName" TEXT NOT NULL,
-    "validationType" TEXT NOT NULL,
+    "rule" "Rules" NOT NULL,
     "regexPattern" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -34,3 +37,6 @@ CREATE TABLE "ValidationResult" (
 
     CONSTRAINT "ValidationResult_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ValidationRule_sourceId_keyName_rule_key" ON "ValidationRule"("sourceId", "keyName", "rule");

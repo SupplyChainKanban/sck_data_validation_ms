@@ -3,6 +3,7 @@ import { CreateValidationRuleDto } from './dto/create-validation-rule.dto';
 import { PrismaClient } from '@prisma/client';
 import { SCK_NATS_SERVICE } from 'src/config';
 import { ClientProxy } from '@nestjs/microservices';
+import { handleExceptions } from 'src/common';
 
 @Injectable()
 export class ValidationService extends PrismaClient implements OnModuleInit {
@@ -15,16 +16,17 @@ export class ValidationService extends PrismaClient implements OnModuleInit {
     super();
   }
 
-
   async onModuleInit() {
     await this.$connect();
     this.logger.log('Database connected')
   }
 
-  create(createValidationRuleDto: CreateValidationRuleDto) {
-    return this.validationRule.create({
-      data: createValidationRuleDto
-    });
+  async create(createValidationRuleDto: CreateValidationRuleDto) {
+    try {
+      return await this.validationRule.create({ data: createValidationRuleDto });
+    } catch (error) {
+      handleExceptions(error, this.logger)
+    }
   }
 
   validate() {

@@ -1,1 +1,5 @@
+export * from './change-result-status.dto'
 export * from './create-validation-rule.dto'
+export * from './validate-data.dto'
+export * from './validation-log.dto'
+export * from './validation-result.dto'

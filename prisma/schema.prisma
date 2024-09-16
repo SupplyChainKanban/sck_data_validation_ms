@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["omitApi"]
 }
 
@@ -25,15 +25,16 @@ model ValidationLog {
   rawDataId String
   errors    String
   timestamp DateTime @default(now())
+  sourceId  String
 }
 
 model ValidationResult {
   id            String           @id @default(uuid())
-  rawDataId     String
   validatedData Json
-  priority      RawDataPriority
   status        ValidationStatus @default(PENDING)
   timestamp     DateTime         @default(now())
+  rawDataId     String
+  priority      RawDataPriority
 }
 
 enum Rules {

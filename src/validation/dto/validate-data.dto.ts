@@ -12,6 +12,10 @@ export class ValidateDataDto {
     @IsUUID()
     public rawDataId: string;
 
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    public sourceId: string;
 
     @IsObject()
     @IsNotEmptyObject()

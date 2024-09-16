@@ -10,5 +10,10 @@ export class ValidationLogDto {
 
     @IsNotEmpty()
     @IsString()
+    @IsUUID()
+    public sourceId: string;
+
+    @IsNotEmpty()
+    @IsString()
     public errors: string;
 }

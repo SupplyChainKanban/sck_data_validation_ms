@@ -22,3 +22,15 @@ export const validationStatusList = [
     ValidationStatus.PENDING,
     ValidationStatus.PROCESSED,
 ]
+
+export enum RawDataStatus {
+    PENDING = 'PENDING',
+    VALIDATED = 'VALIDATED',
+    ERROR = 'ERROR',
+}
+
+export const rawStatusList = [
+    RawDataStatus.PENDING,
+    RawDataStatus.VALIDATED,
+    RawDataStatus.ERROR,
+]

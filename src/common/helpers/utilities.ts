@@ -1,6 +1,17 @@
 import { ValidateDataDto } from "src/validation/dto";
 import { Rule } from "../interfaces/rules.interface";
 
+export const delay = (ms: number) => {
+    return new Promise(
+        (res, rej) => {
+            setTimeout(() => {
+                console.log('Acabó el tiempo ')
+                res(true)
+            }, ms);
+        }
+    )
+}
+
 export const isFloat = (n: any) => {
     return Number(n) === n && n % 1 !== 0;
 }

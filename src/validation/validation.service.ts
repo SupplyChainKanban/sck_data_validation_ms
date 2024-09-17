@@ -43,17 +43,37 @@ export class ValidationService extends PrismaClient implements OnModuleInit {
 
       if (errors.length > 0) {
         await this.createValidationLog(validateDataDto, errors);
-        await this.updateRawDataStatus(validateDataDto, RawDataStatus.ERROR)
+        this.updateRawDataStatus(validateDataDto, RawDataStatus.ERROR)
         return;
       }
       //TODO: Cuando se tenga la data real, verificar si es necesario colocar una función para transformar la data
       //* const transformedData = this.transformData(validateDataDto.rawData)
-      await this.createValidationResult(validateDataDto)
-      await this.updateRawDataStatus(validateDataDto, RawDataStatus.VALIDATED)
-      //TODO: Emitir el procesamiento de datos
+      const dataToProcess = await this.createValidationResult(validateDataDto)
+      this.updateRawDataStatus(validateDataDto, RawDataStatus.VALIDATED)
+      this.client.emit('processData', dataToProcess)
       return;
     } catch (error) {
+      this.updateRawDataStatus(validateDataDto, RawDataStatus.ERROR)
       handleExceptions(error, this.logger)
+    }
+  }
+
+  async updateStatus(changeResultStatusDto: ChangeResultStatusDto) {
+    const { id, status } = changeResultStatusDto;
+    try {
+      const oldValidationStatus = await this.validationResult.findFirst({
+        where: { id },
+        select: { status: true }
+      })
+
+      if (oldValidationStatus.status === status) return;
+      await this.validationResult.update({
+        where: { id },
+        data: { status },
+      })
+
+    } catch (error) {
+      handleExceptions(error, this.logger);
     }
   }
 
@@ -66,16 +86,21 @@ export class ValidationService extends PrismaClient implements OnModuleInit {
     await this.validationLog.create({ data: validationLog })
   }
 
-  private async createValidationResult(validateDataDto: ValidateDataDto): Promise<void> {
-    const validationResult: ValidationResultDto = {
-      rawDataId: validateDataDto.rawDataId,
-      validatedData: validateDataDto.dataPayload,
-      priority: validateDataDto.priority,
-    }
-    await this.validationResult.create({ data: validationResult })
+  private async createValidationResult(validateDataDto: ValidateDataDto): Promise<ValidationResultDto> {
+    const { id } = await this.validationResult.create({
+      data: {
+        rawDataId: validateDataDto.rawDataId,
+        validatedData: validateDataDto.dataPayload,
+        priority: validateDataDto.priority,
+      },
+      select: {
+        id: true,
+      }
+    })
+    return { validationResultId: id, rawDataId: validateDataDto.rawDataId, validatedData: validateDataDto.dataPayload, priority: validateDataDto.priority };
   }
 
-  private async updateRawDataStatus(validateDataDto: ValidateDataDto, status: RawDataStatus): Promise<void> {
+  private updateRawDataStatus(validateDataDto: ValidateDataDto, status: RawDataStatus): void {
     const changeRawDataStatus: ChangeRawDataStatusDto = {
       id: validateDataDto.rawDataId,
       status: status,

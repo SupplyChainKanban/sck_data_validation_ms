@@ -11,6 +11,11 @@ export class ValidationResultDto {
     @IsNotEmpty()
     @IsString()
     @IsUUID()
+    public validationResultId: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
     public rawDataId: string;
 
 

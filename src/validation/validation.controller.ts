@@ -2,7 +2,7 @@ import { Controller, NotImplementedException } from '@nestjs/common';
 import { EventPattern, MessagePattern, Payload } from '@nestjs/microservices';
 import { ValidationService } from './validation.service';
 import { CreateValidationRuleDto } from './dto/create-validation-rule.dto';
-import { ValidateDataDto } from './dto';
+import { ChangeResultStatusDto, ValidateDataDto } from './dto';
 
 @Controller()
 export class ValidationController {
@@ -18,4 +18,13 @@ export class ValidationController {
   validate(@Payload() validateDataDto: ValidateDataDto) {
     return this.validationService.validate(validateDataDto);
   }
+
+  @EventPattern('update.validationResult.status')
+  @MessagePattern('update.validationResult.status')
+  updateStatus(@Payload() changeResultStatusDto: ChangeResultStatusDto) {
+    return this.validationService.updateStatus(changeResultStatusDto);
+  }
+
+
+
 }

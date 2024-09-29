@@ -34,10 +34,10 @@ export const validateByRule = (rules: Rule[], validateDataDto: ValidateDataDto):
                 if (!keyValue) errors.push(`${rule.keyName} is required`);
                 break;
             case 'number':
-                if (!Number.isSafeInteger(keyValue)) errors.push(`${rule.keyName}: '${keyValue}' should be an integer`);
+                if (!Number.isSafeInteger(keyValue)) errors.push(`${rule.keyName}: '${keyValue}' should be just an integer`);
                 break;
             case 'numeric':
-                if (!isFloat(keyValue)) errors.push(`${rule.keyName}: '${keyValue}' should be a float`);
+                if (!isFloat(keyValue) && !Number.isSafeInteger(keyValue)) errors.push(`${rule.keyName}: '${keyValue}' should be a float or an integer`);
                 break;
             case 'string':
                 if (!(typeof keyValue === 'string')) errors.push(`${rule.keyName}: '${keyValue}' should be a string`);
@@ -47,7 +47,7 @@ export const validateByRule = (rules: Rule[], validateDataDto: ValidateDataDto):
                 break;
             case 'date_format':
                 const dateTimeRegExp = new RegExp(rule.regexPattern);
-                if (!(dateTimeRegExp.test(keyValue))) errors.push(`${rule.keyName}: '${keyValue}' should be a dateTime like yyyy:mm:ssThh:mm`);
+                if (!(dateTimeRegExp.test(keyValue))) errors.push(`${rule.keyName}: '${keyValue}' should be a dateTime like dd:mm:yyyy`);
                 break;
             case 'enum':
                 const enumRegExp = new RegExp(rule.regexPattern);

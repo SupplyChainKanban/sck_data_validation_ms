@@ -21,7 +21,7 @@ export const isAlphanumeric = (str: any) => {
     return str.replace(/[A-Z]|[a-z]|[0-9]/g, "") === "";
 }
 
-export const validateByRule = (rules: Rule[], validateDataDto: ValidateDataDto): String[] => {
+export const validateByRule = (rules: Rule[], validateDataDto: ValidateDataDto): string[] => {
     const errors = [];
     const evaluatedKeyNames = new Set();
 

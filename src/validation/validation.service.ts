@@ -39,7 +39,7 @@ export class ValidationService extends PrismaClient implements OnModuleInit {
         omit: { updatedAt: true, createdAt: true },
       })
 
-      const errors: String[] = validateByRule(rules, validateDataDto);
+      const errors: string[] = validateByRule(rules, validateDataDto);
 
       if (errors.length > 0) {
         await this.createValidationLog(validateDataDto, errors);

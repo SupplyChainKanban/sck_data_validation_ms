@@ -22,9 +22,17 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-# Data Validation Microservice
+# Microservicio de validación de datos
 
-## Dev
+En este microservicio se reciben los datos ingestados y se validan de acuerdo a las reglas establecidas.
+
+## Flujo de datos
+
+![](/diagrams/Ms_validation.drawio.png)
+
+## Despliegue
+
+### Dev
 
 1. Clonar el repositorio
 2. Instalar dependencias

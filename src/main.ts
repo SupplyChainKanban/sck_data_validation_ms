@@ -25,4 +25,5 @@ async function main() {
   await app.listen();
   logger.log(`Data Validation Microservice running on port ${envs.port}`)
 }
+
 main();

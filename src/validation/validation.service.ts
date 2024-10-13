@@ -3,7 +3,7 @@ import { CreateValidationRuleDto } from './dto/create-validation-rule.dto';
 import { PrismaClient } from '@prisma/client';
 import { SCK_NATS_SERVICE } from 'src/config';
 import { ClientProxy } from '@nestjs/microservices';
-import { delay, handleExceptions, validateByRule } from 'src/common';
+import { handleExceptions, validateByRule } from 'src/common';
 import { ChangeResultStatusDto, ValidateDataDto, ValidationLogDto, ValidationResultDto } from './dto';
 import { Rule } from 'src/common/index';
 import { ChangeRawDataStatusDto } from './dto/change-raw-data-status.dto';

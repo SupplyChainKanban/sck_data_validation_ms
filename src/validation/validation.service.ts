@@ -11,7 +11,7 @@ import { RawDataStatus } from './enums/data.enum';
 
 @Injectable()
 export class ValidationService extends PrismaClient implements OnModuleInit {
-  private readonly logger = new Logger('DataValidationService');
+  private readonly logger = new Logger(ValidationService.name);
 
   constructor(
     @Inject(SCK_NATS_SERVICE) private readonly client: ClientProxy
@@ -78,33 +78,45 @@ export class ValidationService extends PrismaClient implements OnModuleInit {
   }
 
   private async createValidationLog(validateDataDto: ValidateDataDto, errors: String[]): Promise<void> {
-    const validationLog: ValidationLogDto = {
-      rawDataId: validateDataDto.rawDataId,
-      sourceId: validateDataDto.sourceId,
-      errors: errors.join(', ')
+    try {
+      const validationLog: ValidationLogDto = {
+        rawDataId: validateDataDto.rawDataId,
+        sourceId: validateDataDto.sourceId,
+        errors: errors.join(', ')
+      }
+      await this.validationLog.create({ data: validationLog })
+    } catch (error) {
+      handleExceptions(error, this.logger);
     }
-    await this.validationLog.create({ data: validationLog })
   }
 
   private async createValidationResult(validateDataDto: ValidateDataDto): Promise<ValidationResultDto> {
-    const { id } = await this.validationResult.create({
-      data: {
-        rawDataId: validateDataDto.rawDataId,
-        validatedData: validateDataDto.dataPayload,
-        priority: validateDataDto.priority,
-      },
-      select: {
-        id: true,
-      }
-    })
-    return { validationResultId: id, rawDataId: validateDataDto.rawDataId, validatedData: validateDataDto.dataPayload, priority: validateDataDto.priority };
+    try {
+      const { id } = await this.validationResult.create({
+        data: {
+          rawDataId: validateDataDto.rawDataId,
+          validatedData: validateDataDto.dataPayload,
+          priority: validateDataDto.priority,
+        },
+        select: {
+          id: true,
+        }
+      })
+      return { validationResultId: id, rawDataId: validateDataDto.rawDataId, validatedData: validateDataDto.dataPayload, priority: validateDataDto.priority };
+    } catch (error) {
+      handleExceptions(error, this.logger);
+    }
   }
 
   private updateRawDataStatus(validateDataDto: ValidateDataDto, status: RawDataStatus): void {
-    const changeRawDataStatus: ChangeRawDataStatusDto = {
-      id: validateDataDto.rawDataId,
-      status: status,
+    try {
+      const changeRawDataStatus: ChangeRawDataStatusDto = {
+        id: validateDataDto.rawDataId,
+        status: status,
+      }
+      this.client.emit('update.rawData.status', changeRawDataStatus)
+    } catch (error) {
+      handleExceptions(error, this.logger);
     }
-    this.client.emit('update.rawData.status', changeRawDataStatus)
   }
 }
